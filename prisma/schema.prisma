@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  username     String  @unique
+  password     String?
+  refreshToken String?
+  image        String?
+
+  reservation Reservation[]
+}
+
+model Movie {
+  id       Int    @id @default(autoincrement())
+  title    String
+  director String
+  genre    String
+  duration Int
+
+  theatres TheatreMovie[]
+}
+
+model Mall {
+  id       Int      @id @default(autoincrement())
+  name     String   @unique
+  address  String
+  location String[]
+
+  theatres Theatre[]
+}
+
+model Theatre {
+  id     Int  @id @default(autoincrement())
+  mallId Int?
+
+  seat   Seat[]
+  movies TheatreMovie[]
+  Mall   Mall?          @relation(fields: [mallId], references: [id])
+}
+
+model Seat {
+  id         Int           @id @default(autoincrement())
+  row        String
+  column     Int
+  theatreId  Int
+  isActive   Boolean       @default(true)
+  resevation Reservation[]
+
+  theatre Theatre @relation(fields: [theatreId], references: [id])
+}
+
+model TheatreMovie {
+  id        Int      @id @default(autoincrement())
+  theatreId Int?
+  movieId   Int?
+  showDate  DateTime @db.Date
+  showTime  DateTime @db.Time()
+
+  reservation Reservation[]
+  Theatre     Theatre?      @relation(fields: [theatreId], references: [id])
+  Movie       Movie?        @relation(fields: [movieId], references: [id])
+}
+
+model Reservation {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  seatId         Int
+  theatreMovieId Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  User         User?         @relation(fields: [userId], references: [id])
+  Seat         Seat?         @relation(fields: [seatId], references: [id])
+  TheatreMovie TheatreMovie? @relation(fields: [theatreMovieId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
