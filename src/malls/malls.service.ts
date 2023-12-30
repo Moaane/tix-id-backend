@@ -7,9 +7,9 @@ import { CreateMallDto, UpdateMallDto } from './dto/mall.dto';
 export class MallsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(body: CreateMallDto): Promise<Mall> {
-    return await this.prisma.mall.create({ data: body });
-  }
+  // async create(body: CreateMallDto): Promise<Mall> {
+  //   return await this.prisma.mall.create({ data: body });
+  // }
 
   async findAll(): Promise<Mall[]> {
     return await this.prisma.mall.findMany();

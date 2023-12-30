@@ -14,9 +14,10 @@ model User {
   id           Int     @id @default(autoincrement())
   email        String  @unique
   username     String  @unique
-  password     String?
+  password     String
   refreshToken String?
   image        String?
+  role         Role    @default(USER)
 
   reservation Reservation[]
 }
@@ -44,20 +45,22 @@ model Theatre {
   id     Int  @id @default(autoincrement())
   mallId Int?
 
-  seat   Seat[]
+  seats  Seat[]
   movies TheatreMovie[]
   Mall   Mall?          @relation(fields: [mallId], references: [id])
 }
 
 model Seat {
-  id         Int           @id @default(autoincrement())
-  row        String
-  column     Int
-  theatreId  Int
-  isActive   Boolean       @default(true)
-  resevation Reservation[]
+  id             Int     @id @default(autoincrement())
+  row            String
+  column         Int
+  theatreMovieId Int?
+  theatreId      Int?
+  isActive       Boolean @default(true)
 
-  theatre Theatre @relation(fields: [theatreId], references: [id])
+  resevation   Reservation[]
+  TheatreMovie TheatreMovie? @relation(fields: [theatreMovieId], references: [id])
+  Theatre      Theatre?      @relation(fields: [theatreId], references: [id])
 }
 
 model TheatreMovie {
@@ -68,6 +71,7 @@ model TheatreMovie {
   showTime  DateTime @db.Time()
 
   reservation Reservation[]
+  seats       Seat[]
   Theatre     Theatre?      @relation(fields: [theatreId], references: [id])
   Movie       Movie?        @relation(fields: [movieId], references: [id])
 }
