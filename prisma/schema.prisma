@@ -38,7 +38,8 @@ model Mall {
   address  String
   location String[]
 
-  theatres Theatre[]
+  theatreMovie TheatreMovie[]
+  theatres     Theatre[]
 }
 
 model Theatre {
@@ -67,6 +68,7 @@ model TheatreMovie {
   id        Int      @id @default(autoincrement())
   theatreId Int?
   movieId   Int?
+  mallId    Int?
   showDate  DateTime @db.Date
   showTime  DateTime @db.Time()
 
@@ -74,6 +76,7 @@ model TheatreMovie {
   seats       Seat[]
   Theatre     Theatre?      @relation(fields: [theatreId], references: [id])
   Movie       Movie?        @relation(fields: [movieId], references: [id])
+  Mall        Mall?         @relation(fields: [mallId], references: [id])
 }
 
 model Reservation {

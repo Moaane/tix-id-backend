@@ -3,12 +3,12 @@ import { MallEntity } from '../entities/mall.entity';
 
 export class CreateMallDto extends OmitType(MallEntity, ['id']) {
   name: string;
-  latitude: string;
-  longitude: string;
+  address: string;
+  location: string[];
 }
 
 export class UpdateMallDto extends PartialType(CreateMallDto) {
   name?: string;
-  latitude?: string;
-  longitude?: string;
+  address?: string;
+  location?: string[];
 }
